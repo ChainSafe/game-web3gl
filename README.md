@@ -1,4 +1,4 @@
-# Unity ^2020.1.0 Web3GL Template with Create React App
+# Unity ^2019.4 Web3GL Template with Create React App
 
 [![](https://user-images.githubusercontent.com/19412160/118584681-7a844200-b765-11eb-8336-6828eafb823d.png)](https://www.youtube.com/watch?v=WkWYPuFHM5k)
 
