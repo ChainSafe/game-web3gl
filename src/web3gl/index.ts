@@ -14,13 +14,6 @@ declare global {
 interface Web3GL {
   login: () => void;
   loginMessage: string;
-  callContract: (
-    method: string,
-    abi: string,
-    contract: string,
-    args: string
-  ) => void;
-  callResponse: string;
   sendContract: (
     method: string,
     abi: string,
@@ -28,15 +21,15 @@ interface Web3GL {
     args: string,
     value: string
   ) => void;
+  sendContractResponse: string;
 }
 
 // global variables
 window.web3gl = {
   login,
   loginMessage: "",
-  callContract,
-  callResponse: "",
   sendContract,
+  sendContractResponse: ""
 };
 
 // https://docs.blocknative.com/onboard
@@ -87,28 +80,6 @@ async function signMessage() {
 }
 
 /*
-calls any contract method
-const method = "balanceOf"
-const abi = [ { inputs: [ { internalType: "address", name: "account", type: "address" }, { internalType: "uint256", name: "id", type: "uint256" }, ], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function", }, ];
-const contract = "0x2ebecabbbe8a8c629b99ab23ed154d74cd5d4342"
-const args = ["0x72b8Df71072E38E8548F9565A322B04b9C752932", 17]
-window.web3gl.callContract(abi, contract, args)
-*/
-async function callContract(
-  method: string,
-  abi: string,
-  contract: string,
-  args: string
-) {
-  const response = await new web3.eth.Contract(
-    JSON.parse(abi),
-    contract
-  ).methods[method](...JSON.parse(args)).call();
-  console.log(response);
-  window.web3gl.callResponse = response.toString();
-}
-
-/*
 send eth and call any contract
 const method = "increment"
 const abi = [ { "inputs": [], "name": "increment", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "x", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]
@@ -126,9 +97,16 @@ async function sendContract(
 ) {
   console.log({ method, abi, contract, args, value });
   const from = (await web3.eth.getAccounts())[0];
-  const response = await new web3.eth.Contract(
+  new web3.eth.Contract(
     JSON.parse(abi),
     contract
-  ).methods[method](...JSON.parse(args)).send({ from, value });
-  console.log(response);
+  )
+  .methods[method](...JSON.parse(args))
+  .send({ from, value })
+  .on("transactionHash", (transactionHash: any) => {
+    window.web3gl.sendContractResponse = transactionHash;
+  })
+  .on("error", (error: any) => {
+    window.web3gl.sendContractResponse = error.message;
+  })
 }
