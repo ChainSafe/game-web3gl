@@ -22,6 +22,8 @@ interface Web3GL {
     value: string
   ) => void;
   sendContractResponse: string;
+  signMessage: (message: string) => void;
+  signMessageResponse: string;
 }
 
 // global variables
@@ -29,7 +31,9 @@ window.web3gl = {
   login,
   loginMessage: "",
   sendContract,
-  sendContractResponse: ""
+  sendContractResponse: "",
+  signMessage,
+  signMessageResponse: "",
 };
 
 // https://docs.blocknative.com/onboard
@@ -56,27 +60,40 @@ const onboard = Onboard({
   },
 });
 
-
 // call window.web3gl.login() to display onboardjs modal
 async function login() {
   try {
     await onboard.walletSelect();
     await onboard.walletCheck();
-    // save login message for unity to access
-    window.web3gl.loginMessage = await signMessage();
-    console.log(window.web3gl.loginMessage);
+    signLoginMessage();
   } catch (error) {
     console.log(error);
   }
 }
 
-// sign message to verify user address.
-async function signMessage() {
+// generate and save message for login scene
+async function signLoginMessage() {
   const from: string = (await web3.eth.getAccounts())[0];
   const expiration: string = Math.round(Date.now() / 1000 + 300).toString();
   const message: string = `${from}-${expiration}`;
   const signature: string = await web3.eth.personal.sign(message, from, "");
-  return `${signature}-${message}`;
+  window.web3gl.loginMessage = `${signature}-${from}-${expiration}`;
+  console.log(window.web3gl.loginMessage);
+}
+
+/*
+sign message to verify user address.
+web3gl.signMessage("hello")
+*/
+async function signMessage(message: string) {
+  try {
+    const from: string = (await web3.eth.getAccounts())[0];
+    const signature: string = await web3.eth.personal.sign(message, from, "");
+    window.web3gl.signMessageResponse = signature;
+    console.log(window.web3gl.signMessageResponse);
+  } catch (error: any) {
+    window.web3gl.signMessageResponse = error.message;
+  }
 }
 
 /*
@@ -97,16 +114,14 @@ async function sendContract(
 ) {
   console.log({ method, abi, contract, args, value });
   const from = (await web3.eth.getAccounts())[0];
-  new web3.eth.Contract(
-    JSON.parse(abi),
-    contract
+  new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
+    ...JSON.parse(args)
   )
-  .methods[method](...JSON.parse(args))
-  .send({ from, value })
-  .on("transactionHash", (transactionHash: any) => {
-    window.web3gl.sendContractResponse = transactionHash;
-  })
-  .on("error", (error: any) => {
-    window.web3gl.sendContractResponse = error.message;
-  })
+    .send({ from, value })
+    .on("transactionHash", (transactionHash: any) => {
+      window.web3gl.sendContractResponse = transactionHash;
+    })
+    .on("error", (error: any) => {
+      window.web3gl.sendContractResponse = error.message;
+    });
 }
