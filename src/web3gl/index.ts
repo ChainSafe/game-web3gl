@@ -12,8 +12,8 @@ declare global {
   }
 }
 interface Web3GL {
-  login: () => void;
-  loginMessage: string;
+  connect: () => void;
+  connectAccount: string;
   sendContract: (
     method: string,
     abi: string,
@@ -28,8 +28,8 @@ interface Web3GL {
 
 // global variables
 window.web3gl = {
-  login,
-  loginMessage: "",
+  connect,
+  connectAccount: "",
   sendContract,
   sendContractResponse: "",
   signMessage,
@@ -60,25 +60,15 @@ const onboard = Onboard({
   },
 });
 
-// call window.web3gl.login() to display onboardjs modal
-async function login() {
+// call window.web3gl.connect() to display onboardjs modal
+async function connect() {
   try {
     await onboard.walletSelect();
     await onboard.walletCheck();
-    signLoginMessage();
+    window.web3gl.connectAccount = (await web3.eth.getAccounts())[0]
   } catch (error) {
     console.log(error);
   }
-}
-
-// generate and save message for login scene
-async function signLoginMessage() {
-  const from: string = (await web3.eth.getAccounts())[0];
-  const expiration: string = Math.round(Date.now() / 1000 + 300).toString();
-  const message: string = `${from}-${expiration}`;
-  const signature: string = await web3.eth.personal.sign(message, from, "");
-  window.web3gl.loginMessage = `${signature}-${from}-${expiration}`;
-  console.log(window.web3gl.loginMessage);
 }
 
 /*
