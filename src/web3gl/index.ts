@@ -35,7 +35,7 @@ window.web3gl = {
   sendContractResponse: "",
   signMessage,
   signMessageResponse: "",
-  network: 0
+  network: 0,
 };
 
 // https://docs.blocknative.com/onboard
@@ -50,7 +50,7 @@ const onboard = Onboard({
     },
     network: (network) => {
       window.web3gl.network = network;
-    }
+    },
   },
   walletSelect: {
     wallets: [
@@ -70,7 +70,7 @@ async function connect() {
   try {
     await onboard.walletSelect();
     await onboard.walletCheck();
-    window.web3gl.connectAccount = (await web3.eth.getAccounts())[0]
+    window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
   } catch (error) {
     console.log(error);
   }
@@ -119,8 +119,4 @@ async function sendContract(
     .on("error", (error: any) => {
       window.web3gl.sendContractResponse = error.message;
     });
-}
-
-function onWalletUpdate() {
-  console.log('asdf')
 }
