@@ -24,6 +24,7 @@ interface Web3GL {
   sendContractResponse: string;
   signMessage: (message: string) => void;
   signMessageResponse: string;
+  network: number;
 }
 
 // global variables
@@ -34,6 +35,7 @@ window.web3gl = {
   sendContractResponse: "",
   signMessage,
   signMessageResponse: "",
+  network: 0
 };
 
 // https://docs.blocknative.com/onboard
@@ -46,6 +48,9 @@ const onboard = Onboard({
       web3 = new Web3(wallet.provider);
       console.log(`${wallet.name} is now connected`);
     },
+    network: (network) => {
+      window.web3gl.network = network;
+    }
   },
   walletSelect: {
     wallets: [
@@ -114,4 +119,8 @@ async function sendContract(
     .on("error", (error: any) => {
       window.web3gl.sendContractResponse = error.message;
     });
+}
+
+function onWalletUpdate() {
+  console.log('asdf')
 }
