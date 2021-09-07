@@ -1,57 +1,30 @@
 # Unity ^2020.1.0 Web3GL Template with Create React App
 
-[![](https://user-images.githubusercontent.com/19412160/118584681-7a844200-b765-11eb-8336-6828eafb823d.png)](https://www.youtube.com/watch?v=WkWYPuFHM5k)
+## Development
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To run
 
-## Notes
+`yarn start`
 
-### WebGL Prefabs require an `EventSystem`
+`localhost:3000`
 
-![](https://user-images.githubusercontent.com/19412160/118584689-7fe18c80-b765-11eb-9ee0-869b7963cb0b.png)
+## Methods in Browser
 
-### Use Web3GL Template
+![](https://user-images.githubusercontent.com/19412160/132386771-9468f399-9640-4b6a-b28d-576ad7d966a5.png)
 
-![](https://user-images.githubusercontent.com/19412160/118584695-8243e680-b765-11eb-9e4b-4488a7078a56.png)
+Dispay login modal: `webgl.connect()`
 
-### Disable Compression
+Get Network: `web3gl.network`
 
-![](https://user-images.githubusercontent.com/19412160/118584702-83751380-b765-11eb-9610-c833c3d5a8c8.png)
+Get Connected Address: `web3gl.connectAccount`
 
-## Signature
+## Build
 
-Passwordless Login to Game Engine
+`yarn build`
 
-Login Code is broken into 3 parts:
+Rename `build` directory to `Web3GL-2020`
 
-```
-1. Signed message
-2. Signer address
-3. Expiration timestamp
-
-Example: 0x1843015ad6a2932ab9c12d71557b193bc916cef37fc09002a2178f3c2f5e9b1b0d2cc2ac580fa0c5895dbd8ac357e22d3c4917a01365dbae14805f9fb6b2b9be1b-0x35706484aB20Cbf22F5c7a375D5764DA8166aE1c-161402460
-
-Signing "0x3570...-161402460"
-will create signed message
-"0x1843015ad..."
-```
-
-To Verify
-
-```javascript
-window.web3 = new Web3(window.web3.currentProvider);
-const msg = "0x35706484aB20Cbf22F5c7a375D5764DA8166aE1c-1614025671";
-const sig =
-  "0x37c0b3c25a082f6876ec4952b67e897b2936bb454ba32543c3af6336917c5fd01b7bf70e2dbad52d4dc28006e88a0151e007d727c44a629a8ac8792aef53d9551c";
-  
-web3.eth.personal
-  .ecRecover(msg, sig)
-  .then((owner) =>
-    console.log(
-      owner == "0x35706484aB20Cbf22F5c7a375D5764DA8166aE1c".toLowerCase()
-    )
-  );
-```
+Replace here: https://github.com/ChainSafe/web3.unity/tree/main/WebGLTemplates
 
 ## Available Scripts
 
