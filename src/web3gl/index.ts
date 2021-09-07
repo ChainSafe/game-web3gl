@@ -40,7 +40,6 @@ window.web3gl = {
 
 // https://docs.blocknative.com/onboard
 const onboard = Onboard({
-  dappId: "abfa7356-64c3-4047-a6e1-cdb39a0c691e",
   networkName: window.web3NetworkName, // from network.js
   networkId: window.web3NetworkId, // from network.js
   subscriptions: {
@@ -57,7 +56,7 @@ const onboard = Onboard({
       { walletName: "metamask", preferred: true },
       {
         walletName: "walletConnect",
-        infuraKey: "6429a308b4d646399b1ea170bb406c61",
+        infuraKey: "2d0062a43e9e4086829df115488b45a8",
         preferred: true,
       },
       { walletName: "torus", preferred: true },
