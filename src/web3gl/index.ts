@@ -19,7 +19,8 @@ interface Web3GL {
     abi: string,
     contract: string,
     args: string,
-    value: string
+    value: string,
+    gas: string
   ) => void;
   sendContractResponse: string;
   signMessage: (message: string) => void;
@@ -97,7 +98,7 @@ const contract = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
 const args = "[]"
 const value = "0"
 const gas = "1000000" // gas limit
-window.web3gl.sendContract(method, abi, contract, args, value, gasLimit)
+window.web3gl.sendContract(method, abi, contract, args, value, gas)
 */
 async function sendContract(
   method: string,
@@ -105,7 +106,7 @@ async function sendContract(
   contract: string,
   args: string,
   value: string,
-  gas?: string
+  gas: string
 ) {
   console.log({ method, abi, contract, args, value, gas });
   const from = (await web3.eth.getAccounts())[0];
