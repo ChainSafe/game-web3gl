@@ -77,7 +77,7 @@ async function connect() {
 
 /*
 sign message to verify user address.
-web3gl.signMessage("hello")
+window.web3gl.signMessage("hello")
 */
 async function signMessage(message: string) {
   try {
@@ -91,27 +91,28 @@ async function signMessage(message: string) {
 }
 
 /*
-send eth and call any contract
 const method = "increment"
-const abi = [ { "inputs": [], "name": "increment", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "x", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]
+const abi = `[ { "inputs": [], "name": "increment", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "x", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]`;
 const contract = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
-const args = []
+const args = "[]"
 const value = "0"
-window.web3gl.callContract(abi, contract, args)
+const gas = "1000000" // gas limit
+window.web3gl.sendContract(method, abi, contract, args, value, gasLimit)
 */
 async function sendContract(
   method: string,
   abi: string,
   contract: string,
   args: string,
-  value: string
+  value: string,
+  gas?: string
 ) {
-  console.log({ method, abi, contract, args, value });
+  console.log({ method, abi, contract, args, value, gas });
   const from = (await web3.eth.getAccounts())[0];
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
     ...JSON.parse(args)
   )
-    .send({ from, value })
+    .send({ from, value, gas })
     .on("transactionHash", (transactionHash: any) => {
       window.web3gl.sendContractResponse = transactionHash;
     })
