@@ -8,6 +8,10 @@ To run
 
 `localhost:3000`
 
+## Video Tutorial
+
+[Youtube](https://youtu.be/O6RH6PzNme4)
+
 ## Methods in Browser
 
 ![](https://user-images.githubusercontent.com/19412160/132386771-9468f399-9640-4b6a-b28d-576ad7d966a5.png)
