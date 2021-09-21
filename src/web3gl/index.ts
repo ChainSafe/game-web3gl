@@ -9,7 +9,6 @@ declare global {
   interface Window {
     web3NetworkName: string; // network.js
     web3NetworkId: number; // network.js
-    web3Account:string;
     web3gl: Web3GL;
   }
 }
