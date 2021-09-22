@@ -46,8 +46,7 @@ const onboard = Onboard({
   networkId: window.web3NetworkId, // from network.js
 
   subscriptions: {
-    address: (address) => {
-      window.web3gl.connectAccount = address;
+    address: () => {
       if (!initialLogin) {
         window.location.reload();
         connect();
@@ -100,7 +99,6 @@ async function signMessage(message: string) {
     const from: string = (await web3.eth.getAccounts())[0];
     const signature: string = await web3.eth.personal.sign(message, from, "");
     window.web3gl.signMessageResponse = signature;
-    console.log(window.web3gl.signMessageResponse);
   } catch (error: any) {
     window.web3gl.signMessageResponse = error.message;
   }
@@ -123,7 +121,6 @@ async function sendContract(
   value: string,
   gas: string
 ) {
-  console.log({ method, abi, contract, args, value, gas });
   const from = (await web3.eth.getAccounts())[0];
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
     ...JSON.parse(args)
