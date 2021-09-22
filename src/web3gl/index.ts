@@ -41,7 +41,7 @@ window.web3gl = {
 
 };
 // https://docs.blocknative.com/onboard
-let initialLogin = false;
+let initialLogin = true;
 
 const onboard = Onboard({
   networkName: window.web3NetworkName, // from network.js
@@ -80,7 +80,7 @@ async function connect() {
   try {
     await onboard.walletSelect();
     await onboard.walletCheck();
-    initialLogin = true;
+    initialLogin = false;
     window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
 
   } catch (error) {
@@ -95,6 +95,7 @@ sign message to verify user address.
 window.web3gl.signMessage("hello")
 */
 async function signMessage(message: string) {
+
   try {
     const from: string = (await web3.eth.getAccounts())[0];
     const signature: string = await web3.eth.personal.sign(message, from, "");
