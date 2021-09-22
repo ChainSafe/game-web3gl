@@ -38,9 +38,10 @@ window.web3gl = {
   signMessageResponse: "",
   network: 0,
 };
-// https://docs.blocknative.com/onboard
+
 let initialLogin = true;
 
+// https://docs.blocknative.com/onboard
 const onboard = Onboard({
   networkName: window.web3NetworkName, // from network.js
   networkId: window.web3NetworkId, // from network.js
