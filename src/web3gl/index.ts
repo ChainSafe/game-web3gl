@@ -25,7 +25,6 @@ interface Web3GL {
   sendContractResponse: string;
   signMessage: (message: string) => void;
   signMessageResponse: string;
-  network: number;
 }
 
 // global variables
@@ -36,10 +35,10 @@ window.web3gl = {
   sendContractResponse: "",
   signMessage,
   signMessageResponse: "",
-  network: 0,
 };
 
 let initialLogin = true;
+let initialNetwork = true;
 
 // https://docs.blocknative.com/onboard
 const onboard = Onboard({
@@ -57,8 +56,11 @@ const onboard = Onboard({
     wallet: (wallet) => {
       web3 = new Web3(wallet.provider);
     },
-    network: (network) => {
-      window.web3gl.network = network;
+    network: () => {
+      if (!initialLogin) {
+        window.location.reload();
+        connect();
+      };
     },
   },
   walletSelect: {
@@ -80,6 +82,7 @@ async function connect() {
     await onboard.walletSelect();
     await onboard.walletCheck();
     initialLogin = false;
+    initialNetwork = false;
     window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
   } catch (error) {
     console.log(error);
