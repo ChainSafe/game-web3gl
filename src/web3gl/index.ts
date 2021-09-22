@@ -1,6 +1,7 @@
 import Onboard from "bnc-onboard";
 import Web3 from "web3";
 
+
 let web3: Web3;
 
 // declare types
@@ -15,12 +16,12 @@ interface Web3GL {
   connect: () => void;
   connectAccount: string;
   sendContract: (
-    method: string,
-    abi: string,
-    contract: string,
-    args: string,
-    value: string,
-    gas: string
+      method: string,
+      abi: string,
+      contract: string,
+      args: string,
+      value: string,
+      gas: string
   ) => void;
   sendContractResponse: string;
   signMessage: (message: string) => void;
@@ -37,16 +38,25 @@ window.web3gl = {
   signMessage,
   signMessageResponse: "",
   network: 0,
-};
 
+};
 // https://docs.blocknative.com/onboard
+let initialLogin = true;
+
 const onboard = Onboard({
   networkName: window.web3NetworkName, // from network.js
   networkId: window.web3NetworkId, // from network.js
+
   subscriptions: {
+    address:(address) => {
+      window.web3gl.connectAccount = address;
+      if (!initialLogin) {
+        window.location.reload();
+        connect();
+      }
+    },
     wallet: (wallet) => {
       web3 = new Web3(wallet.provider);
-      console.log(`${wallet.name} is now connected`);
     },
     network: (network) => {
       window.web3gl.network = network;
@@ -70,17 +80,22 @@ async function connect() {
   try {
     await onboard.walletSelect();
     await onboard.walletCheck();
+    initialLogin = false;
     window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
+
   } catch (error) {
     console.log(error);
   }
 }
+
+
 
 /*
 sign message to verify user address.
 window.web3gl.signMessage("hello")
 */
 async function signMessage(message: string) {
+
   try {
     const from: string = (await web3.eth.getAccounts())[0];
     const signature: string = await web3.eth.personal.sign(message, from, "");
@@ -90,6 +105,8 @@ async function signMessage(message: string) {
     window.web3gl.signMessageResponse = error.message;
   }
 }
+
+
 
 /*
 const method = "increment"
@@ -101,23 +118,23 @@ const gas = "1000000" // gas limit
 window.web3gl.sendContract(method, abi, contract, args, value, gas)
 */
 async function sendContract(
-  method: string,
-  abi: string,
-  contract: string,
-  args: string,
-  value: string,
-  gas: string
+    method: string,
+    abi: string,
+    contract: string,
+    args: string,
+    value: string,
+    gas: string
 ) {
   console.log({ method, abi, contract, args, value, gas });
   const from = (await web3.eth.getAccounts())[0];
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
-    ...JSON.parse(args)
+      ...JSON.parse(args)
   )
-    .send({ from, value, gas })
-    .on("transactionHash", (transactionHash: any) => {
-      window.web3gl.sendContractResponse = transactionHash;
-    })
-    .on("error", (error: any) => {
-      window.web3gl.sendContractResponse = error.message;
-    });
+      .send({ from, value, gas })
+      .on("transactionHash", (transactionHash: any) => {
+        window.web3gl.sendContractResponse = transactionHash;
+      })
+      .on("error", (error: any) => {
+        window.web3gl.sendContractResponse = error.message;
+      });
 }
