@@ -52,6 +52,6 @@
   },
   "main": "index.ts",
   "repository": "git@github.com:ChainSafe/game-web3gl.git",
-  "author": "ChainSafe",
+  "author": "ChainSafeETH",
   "license": "MIT"
 }
