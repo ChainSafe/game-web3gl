@@ -39,14 +39,23 @@ window.web3gl = {
   network: 0,
 };
 
+let initialLogin = true;
+
 // https://docs.blocknative.com/onboard
 const onboard = Onboard({
   networkName: window.web3NetworkName, // from network.js
   networkId: window.web3NetworkId, // from network.js
+
   subscriptions: {
+    address: (address) => {
+      window.web3gl.connectAccount = address;
+      if (!initialLogin) {
+        window.location.reload();
+        connect();
+      }
+    },
     wallet: (wallet) => {
       web3 = new Web3(wallet.provider);
-      console.log(`${wallet.name} is now connected`);
     },
     network: (network) => {
       window.web3gl.network = network;
@@ -70,6 +79,7 @@ async function connect() {
   try {
     await onboard.walletSelect();
     await onboard.walletCheck();
+    initialLogin = false;
     window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
   } catch (error) {
     console.log(error);
