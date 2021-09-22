@@ -83,7 +83,9 @@ async function connect() {
     await onboard.walletCheck();
     initialLogin = false;
     initialNetwork = false;
-    window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
+    if (await web3.eth.net.getId() === window.web3NetworkId){
+      window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
+    }
   } catch (error) {
     console.log(error);
   }
