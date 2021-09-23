@@ -23,6 +23,8 @@ interface Web3GL {
     gas: string
   ) => void;
   sendContractResponse: string;
+  sendTransaction: (to: string, value: string, gas: string) => void;
+  sendTransactionResponse: string;
   signMessage: (message: string) => void;
   signMessageResponse: string;
 }
@@ -33,6 +35,8 @@ window.web3gl = {
   connectAccount: "",
   sendContract,
   sendContractResponse: "",
+  sendTransaction,
+  sendTransactionResponse: "",
   signMessage,
   signMessageResponse: "",
 };
@@ -59,7 +63,7 @@ const onboard = Onboard({
       if (!initialLogin) {
         window.location.reload();
         connect();
-      };
+      }
     },
   },
   walletSelect: {
@@ -82,7 +86,7 @@ async function connect() {
     await onboard.walletCheck();
     initialLogin = false;
     initialNetwork = false;
-    if (await web3.eth.net.getId() === window.web3NetworkId){
+    if ((await web3.eth.net.getId()) === window.web3NetworkId) {
       window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
     }
   } catch (error) {
@@ -131,5 +135,28 @@ async function sendContract(
     })
     .on("error", (error: any) => {
       window.web3gl.sendContractResponse = error.message;
+    });
+}
+
+/*
+const to = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
+const value = "12300000000000000"
+const gas = "21000"
+sendTransaction(to, value, gas);
+*/
+async function sendTransaction(to: string, value: string, gas: string) {
+  const from = (await web3.eth.getAccounts())[0];
+  web3.eth
+    .sendTransaction({
+      from,
+      to,
+      value,
+      gas: gas ? gas : undefined,
+    })
+    .on("transactionHash", (transactionHash: any) => {
+      window.web3gl.sendTransactionResponse = transactionHash;
+    })
+    .on("error", (error: any) => {
+      window.web3gl.sendTransactionResponse = error.message;
     });
 }
