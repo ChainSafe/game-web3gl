@@ -1,4 +1,4 @@
-# Unity ^2020.1.0 Web3GL Template with Create React App
+# Unity ^2021.1.22 Web3GL Template with Create React App
 
 ## Development
 
