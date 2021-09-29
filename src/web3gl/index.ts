@@ -42,7 +42,6 @@ window.web3gl = {
 };
 
 let initialLogin = true;
-let initialNetwork = true;
 
 // https://docs.blocknative.com/onboard
 const onboard = Onboard({
@@ -85,7 +84,6 @@ async function connect() {
     await onboard.walletSelect();
     await onboard.walletCheck();
     initialLogin = false;
-    initialNetwork = false;
     if ((await web3.eth.net.getId()) === window.web3NetworkId) {
       window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
     }
@@ -129,7 +127,11 @@ async function sendContract(
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
     ...JSON.parse(args)
   )
-    .send({ from, value, gas })
+    .send({
+      from,
+      value,
+      gas: gas ? gas : undefined,
+    })
     .on("transactionHash", (transactionHash: any) => {
       window.web3gl.sendContractResponse = transactionHash;
     })
