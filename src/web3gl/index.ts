@@ -106,7 +106,6 @@ async function signMessage(message: string) {
   }
 }
 
-
 /*
 const method = "increment"
 const abi = `[ { "inputs": [], "name": "increment", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "x", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]`;
@@ -128,10 +127,10 @@ async function sendContract(
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
     ...JSON.parse(args)
   )
-    .send({ 
-      from, 
-      value, 
-      gas: gas ? gas : undefined
+    .send({
+      from,
+      value,
+      gas: gas ? gas : undefined,
     })
     .on("transactionHash", (transactionHash: any) => {
       window.web3gl.sendContractResponse = transactionHash;
