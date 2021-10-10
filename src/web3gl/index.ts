@@ -80,15 +80,13 @@ const onboard = Onboard({
 
 // call window.web3gl.connect() to display onboardjs modal
 async function connect() {
-  try {
-    await onboard.walletSelect();
-    await onboard.walletCheck();
-    initialLogin = false;
-    if ((await web3.eth.net.getId()) === window.web3NetworkId) {
-      window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
-    }
-  } catch (error) {
-    console.log(error);
+  await onboard.walletSelect();
+  const walletChecked = await onboard.walletCheck();
+  // if cancels login
+  if (!walletChecked) window.location.reload();
+  initialLogin = false;
+  if ((await web3.eth.net.getId()) === window.web3NetworkId) {
+    window.web3gl.connectAccount = (await web3.eth.getAccounts())[0];
   }
 }
 
