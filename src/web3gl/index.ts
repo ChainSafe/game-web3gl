@@ -1,6 +1,7 @@
 import Onboard from "bnc-onboard";
 import Web3 from "web3";
 
+
 let web3: Web3;
 
 // declare types
@@ -8,6 +9,7 @@ declare global {
   interface Window {
     web3NetworkName: string; // network.js
     web3NetworkId: number; // network.js
+    infuraKey:string; // network.js
     web3gl: Web3GL;
   }
 }
@@ -15,12 +17,12 @@ interface Web3GL {
   connect: () => void;
   connectAccount: string;
   sendContract: (
-    method: string,
-    abi: string,
-    contract: string,
-    args: string,
-    value: string,
-    gas: string
+      method: string,
+      abi: string,
+      contract: string,
+      args: string,
+      value: string,
+      gas: string
   ) => void;
   sendContractResponse: string;
   sendTransaction: (to: string, value: string, gas: string) => void;
@@ -65,12 +67,13 @@ const onboard = Onboard({
       }
     },
   },
+
   walletSelect: {
     wallets: [
       { walletName: "metamask", preferred: true },
       {
         walletName: "walletConnect",
-        infuraKey: "2d0062a43e9e4086829df115488b45a8",
+        infuraKey: window.infuraKey,
         preferred: true,
       },
       { walletName: "torus", preferred: true },
@@ -80,6 +83,8 @@ const onboard = Onboard({
 
 // call window.web3gl.connect() to display onboardjs modal
 async function connect() {
+
+
   await onboard.walletSelect();
   const walletChecked = await onboard.walletCheck();
   // if cancels login
@@ -112,30 +117,31 @@ const args = "[]"
 const value = "0"
 const gas = "1000000" // gas limit
 window.web3gl.sendContract(method, abi, contract, args, value, gas)
+
 */
 async function sendContract(
-  method: string,
-  abi: string,
-  contract: string,
-  args: string,
-  value: string,
-  gas: string
+    method: string,
+    abi: string,
+    contract: string,
+    args: string,
+    value: string,
+    gas: string
 ) {
   const from = (await web3.eth.getAccounts())[0];
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
-    ...JSON.parse(args)
+      ...JSON.parse(args)
   )
-    .send({
-      from,
-      value,
-      gas: gas ? gas : undefined,
-    })
-    .on("transactionHash", (transactionHash: any) => {
-      window.web3gl.sendContractResponse = transactionHash;
-    })
-    .on("error", (error: any) => {
-      window.web3gl.sendContractResponse = error.message;
-    });
+      .send({
+        from,
+        value,
+        gas: gas ? gas : undefined,
+      })
+      .on("transactionHash", (transactionHash: any) => {
+        window.web3gl.sendContractResponse = transactionHash;
+      })
+      .on("error", (error: any) => {
+        window.web3gl.sendContractResponse = error.message;
+      });
 }
 
 /*
@@ -147,16 +153,16 @@ sendTransaction(to, value, gas);
 async function sendTransaction(to: string, value: string, gas: string) {
   const from = (await web3.eth.getAccounts())[0];
   web3.eth
-    .sendTransaction({
-      from,
-      to,
-      value,
-      gas: gas ? gas : undefined,
-    })
-    .on("transactionHash", (transactionHash: any) => {
-      window.web3gl.sendTransactionResponse = transactionHash;
-    })
-    .on("error", (error: any) => {
-      window.web3gl.sendTransactionResponse = error.message;
-    });
+      .sendTransaction({
+        from,
+        to,
+        value,
+        gas: gas ? gas : undefined,
+      })
+      .on("transactionHash", (transactionHash: any) => {
+        window.web3gl.sendTransactionResponse = transactionHash;
+      })
+      .on("error", (error: any) => {
+        window.web3gl.sendTransactionResponse = error.message;
+      });
 }
