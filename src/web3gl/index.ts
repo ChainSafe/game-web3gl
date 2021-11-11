@@ -6,9 +6,8 @@ let web3: Web3;
 // declare types
 declare global {
   interface Window {
-    web3NetworkName: string; // network.js
     web3NetworkId: number; // network.js
-    infuraKey:string; // network.js
+    infuraKey: string; // network.js
     web3gl: Web3GL;
   }
 }
@@ -28,6 +27,7 @@ interface Web3GL {
   sendTransactionResponse: string;
   signMessage: (message: string) => void;
   signMessageResponse: string;
+  networkId: number;
 }
 
 // global variables
@@ -40,13 +40,13 @@ window.web3gl = {
   sendTransactionResponse: "",
   signMessage,
   signMessageResponse: "",
+  networkId: window.web3NetworkId,
 };
 
 let initialLogin = true;
 
 // https://docs.blocknative.com/onboard
 const onboard = Onboard({
-  networkName: window.web3NetworkName, // from network.js
   networkId: window.web3NetworkId, // from network.js
 
   subscriptions: {
@@ -59,11 +59,8 @@ const onboard = Onboard({
     wallet: (wallet) => {
       web3 = new Web3(wallet.provider);
     },
-    network: () => {
-      if (!initialLogin) {
-        window.location.reload();
-        connect();
-      }
+    network: (id) => {
+      window.web3gl.networkId = id;
     },
   },
   walletSelect: {
@@ -72,18 +69,17 @@ const onboard = Onboard({
       {
         walletName: "walletConnect",
         infuraKey: window.infuraKey,
-        preferred: true,
       },
-      { walletName: "torus", preferred: true },
+      { walletName: "torus" },
     ],
   },
 });
 
 // call window.web3gl.connect() to display onboardjs modal
 async function connect() {
-  await onboard.walletSelect();
+  const walletSelected = await onboard.walletSelect();
+  if (!walletSelected) window.location.reload();
   const walletChecked = await onboard.walletCheck();
-  // if cancels login
   if (!walletChecked) window.location.reload();
   initialLogin = false;
   if ((await web3.eth.net.getId()) === window.web3NetworkId) {
