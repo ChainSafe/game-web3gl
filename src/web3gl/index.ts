@@ -6,7 +6,6 @@ let web3: Web3;
 // declare types
 declare global {
   interface Window {
-    web3NetworkName: string; // network.js
     web3NetworkId: number; // network.js
     web3gl: Web3GL;
   }
@@ -27,6 +26,7 @@ interface Web3GL {
   sendTransactionResponse: string;
   signMessage: (message: string) => void;
   signMessageResponse: string;
+  networkId: number;
 }
 
 // global variables
@@ -39,13 +39,13 @@ window.web3gl = {
   sendTransactionResponse: "",
   signMessage,
   signMessageResponse: "",
+  networkId: window.web3NetworkId
 };
 
 let initialLogin = true;
 
 // https://docs.blocknative.com/onboard
 const onboard = Onboard({
-  networkName: window.web3NetworkName, // from network.js
   networkId: window.web3NetworkId, // from network.js
 
   subscriptions: {
@@ -58,11 +58,8 @@ const onboard = Onboard({
     wallet: (wallet) => {
       web3 = new Web3(wallet.provider);
     },
-    network: () => {
-      if (!initialLogin) {
-        window.location.reload();
-        connect();
-      }
+    network: (id) => {
+      window.web3gl.networkId = id;
     },
   },
   walletSelect: {

@@ -17,4 +17,3 @@ Used to set the network
 */
 
 window.web3NetworkId = 1;
-window.web3NetworkName = "mainnet"
