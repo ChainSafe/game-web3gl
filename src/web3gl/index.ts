@@ -7,6 +7,7 @@ let web3: Web3;
 declare global {
   interface Window {
     web3NetworkId: number; // network.js
+    infuraKey:string; // network.js
     web3gl: Web3GL;
   }
 }
@@ -67,7 +68,7 @@ const onboard = Onboard({
       { walletName: "metamask", preferred: true },
       {
         walletName: "walletConnect",
-        infuraKey: "2d0062a43e9e4086829df115488b45a8",
+        infuraKey: window.infuraKey,
         preferred: true,
       },
       { walletName: "torus", preferred: true },
