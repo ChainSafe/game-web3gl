@@ -20,10 +20,16 @@ interface Web3GL {
     contract: string,
     args: string,
     value: string,
-    gas: string
+    gasLimit: string,
+    gasPrice: string
   ) => void;
   sendContractResponse: string;
-  sendTransaction: (to: string, value: string, gas: string) => void;
+  sendTransaction: (
+    to: string,
+    value: string,
+    gasLimit: string,
+    gasPrice: string
+  ) => void;
   sendTransactionResponse: string;
   signMessage: (message: string) => void;
   signMessageResponse: string;
@@ -107,8 +113,9 @@ const abi = `[ { "inputs": [], "name": "increment", "outputs": [], "stateMutabil
 const contract = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
 const args = "[]"
 const value = "0"
-const gas = "1000000" // gas limit
-window.web3gl.sendContract(method, abi, contract, args, value, gas)
+const gasLimit = "222222" // gas limit
+const gasPrice = "333333333333"
+window.web3gl.sendContract(method, abi, contract, args, value, gasLimit, gasPrice)
 */
 async function sendContract(
   method: string,
@@ -116,7 +123,8 @@ async function sendContract(
   contract: string,
   args: string,
   value: string,
-  gas: string
+  gasLimit: string,
+  gasPrice: string
 ) {
   const from = (await web3.eth.getAccounts())[0];
   new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
@@ -125,7 +133,8 @@ async function sendContract(
     .send({
       from,
       value,
-      gas: gas ? gas : undefined,
+      gas: gasLimit ? gasLimit : undefined,
+      gasPrice: gasPrice ? gasPrice : undefined,
     })
     .on("transactionHash", (transactionHash: any) => {
       window.web3gl.sendContractResponse = transactionHash;
@@ -136,19 +145,26 @@ async function sendContract(
 }
 
 /*
-const to = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
+const to = "0xdD4c825203f97984e7867F11eeCc813A036089D1"
 const value = "12300000000000000"
-const gas = "21000"
-sendTransaction(to, value, gas);
+const gasLimit = "22222" // gas limit
+const gasPrice = "33333333333"
+window.web3gl.sendTransaction(to, value, gasLimit, gasPrice);
 */
-async function sendTransaction(to: string, value: string, gas: string) {
+async function sendTransaction(
+  to: string,
+  value: string,
+  gasLimit: string,
+  gasPrice: string
+) {
   const from = (await web3.eth.getAccounts())[0];
   web3.eth
     .sendTransaction({
       from,
       to,
       value,
-      gas: gas ? gas : undefined,
+      gas: gasLimit ? gasLimit : undefined,
+      gasPrice: gasPrice ? gasPrice : undefined,
     })
     .on("transactionHash", (transactionHash: any) => {
       window.web3gl.sendTransactionResponse = transactionHash;
