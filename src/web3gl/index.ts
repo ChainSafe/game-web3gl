@@ -113,8 +113,8 @@ const abi = `[ { "inputs": [], "name": "increment", "outputs": [], "stateMutabil
 const contract = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
 const args = "[]"
 const value = "0"
-const gasLimit = "22222222" // gas limit
-const gasPrice = "33333333333333"
+const gasLimit = "222222" // gas limit
+const gasPrice = "333333333333"
 window.web3gl.sendContract(method, abi, contract, args, value, gasLimit, gasPrice)
 */
 async function sendContract(
