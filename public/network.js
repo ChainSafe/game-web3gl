@@ -21,4 +21,4 @@ Used to set the network
 */
 
 window.web3NetworkId = 1;
-window.infuraKey = "2d0062a43e9e4086829df115488b45a8"
+window.infuraKey = "2d0062a43e9e4086829df115488b45a8";
