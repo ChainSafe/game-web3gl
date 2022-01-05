@@ -1,6 +1,7 @@
 import Onboard from "bnc-onboard";
 import { ethers } from "ethers";
 import { hexlify, parseUnits } from "ethers/lib/utils";
+import { GTS } from "@chainsafe/gts-client-dev";
 
 let provider: ethers.providers.Web3Provider;
 
@@ -15,7 +16,9 @@ declare global {
 }
 interface Web3GL {
   connect: () => void;
+  gtsConnect: () => void;
   connectAccount: string;
+  connectWallet: string;
   sendContract: (
     method: string,
     abi: string,
@@ -51,7 +54,9 @@ interface Web3GL {
 // global variables
 window.web3gl = {
   connect,
+  gtsConnect,
   connectAccount: "",
+  connectWallet: "",
   sendContract,
   sendContractResponse: "",
   sendTransaction,
@@ -105,6 +110,19 @@ async function connect() {
   window.web3gl.connectAccount = await provider.getSigner().getAddress();
 }
 
+const gtsService: GTS = new GTS("test1", "12345"); // TODO: game credentials
+
+async function gtsConnect() {
+  await gtsService.init();
+  await gtsService.whitelist(window.web3gl.connectAccount);
+
+  try {
+    window.web3gl.connectWallet = await gtsService.userWallet(window.web3gl.connectAccount);
+  } catch (error) {
+    window.web3gl.connectWallet = await gtsService.createWallet(window.web3gl.connectAccount);
+  }
+}
+
 /*
 sign message to verify user address.
 window.web3gl.signMessage("hello")
@@ -127,6 +145,16 @@ const value = "0"
 const gasLimit = ""
 const gasPrice = ""
 window.web3gl.sendGTS(method, abi, contract, args, value, gasLimit, gasPrice)
+
+
+const method = "transfer"
+const abi = `[{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]`;
+const contract = "0x6c7179bB7105344b91B56328Fcc72E9c18b845d5"
+const args = `["0x5D8f7aEe31782f37D02E133d08E3Ff1D22179b19", "1000000000000000000"]`
+const value = 0
+const gasLimit = 2500000
+const gasPrice = 1000000000 // 1 gwei
+window.web3gl.sendGTS(method, abi, contract, args, value, gasLimit, gasPrice)
 */
 async function sendGTS(
   method: string,
@@ -137,29 +165,12 @@ async function sendGTS(
   gasLimit: string,
   gasPrice: string
 ) {
-  // create contract data
-  const Contract = new ethers.Contract(
-    "0x0000000000000000000000000000000000000000",
-    JSON.parse(abi),
-    provider
-  );
-  const { data } = await Contract.populateTransaction[method](
-    ...JSON.parse(args)
-  );
-  // sign transaction with contract data
-  provider
-    .getSigner()
-    .sendTransaction({
-      from: await provider.getSigner().getAddress(),
-      to: contract,
-      value: parseUnits(value, "wei"),
-      gasLimit: gasLimit ? hexlify(Number(gasLimit)) : undefined,
-      gasPrice: gasPrice ? hexlify(Number(gasPrice)) : undefined,
-      data,
-    })
-    .then((signedContract: any) => {
-      console.log(signedContract);
-      window.web3gl.sendGTSResponse = signedContract;
+  const safeTx = await gtsService.buildSafeTx(method, abi, contract, JSON.parse(args), value, gasLimit, gasPrice, provider, provider.getSigner(), window.web3gl.connectWallet);
+  const tx = await gtsService.sendTx(safeTx);
+
+  tx.wait()
+    .then((receipt: any) => {
+      window.web3gl.sendGTSResponse = JSON.stringify(receipt);
     })
     .catch((error: any) => {
       window.web3gl.sendGTSResponse = error.message;
