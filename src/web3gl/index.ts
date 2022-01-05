@@ -1,7 +1,7 @@
 import Onboard from "bnc-onboard";
 import { ethers } from "ethers";
 import { hexlify, parseUnits } from "ethers/lib/utils";
-import { GTS } from "gts-client-dev";
+import { GTS } from "@chainsafe/gts-client-dev";
 
 let provider: ethers.providers.Web3Provider;
 
@@ -18,6 +18,7 @@ interface Web3GL {
   connect: () => void;
   gtsConnect: () => void;
   connectAccount: string;
+  connectWallet: string;
   sendContract: (
     method: string,
     abi: string,
@@ -55,6 +56,7 @@ window.web3gl = {
   connect,
   gtsConnect,
   connectAccount: "",
+  connectWallet: "",
   sendContract,
   sendContractResponse: "",
   sendTransaction,
@@ -108,13 +110,17 @@ async function connect() {
   window.web3gl.connectAccount = await provider.getSigner().getAddress();
 }
 
-const gtsService: GTS = new GTS("test1", "12345");
-let userWalletAddress: string;
+const gtsService: GTS = new GTS("test1", "12345"); // TODO: game credentials
 
 async function gtsConnect() {
   await gtsService.init();
   await gtsService.whitelist(window.web3gl.connectAccount);
-  userWalletAddress = await gtsService.userWallet(window.web3gl.connectAccount);
+
+  try {
+    window.web3gl.connectWallet = await gtsService.userWallet(window.web3gl.connectAccount);
+  } catch (error) {
+    window.web3gl.connectWallet = await gtsService.createWallet(window.web3gl.connectAccount);
+  }
 }
 
 /*
@@ -159,16 +165,12 @@ async function sendGTS(
   gasLimit: string,
   gasPrice: string
 ) {
-  const safeTx = await gtsService.buildSafeTx(method, abi, contract, JSON.parse(args), value, gasLimit, gasPrice, provider, provider.getSigner(), userWalletAddress);
+  const safeTx = await gtsService.buildSafeTx(method, abi, contract, JSON.parse(args), value, gasLimit, gasPrice, provider, provider.getSigner(), window.web3gl.connectWallet);
   const tx = await gtsService.sendTx(safeTx);
-
-  console.log("TX", tx); // TODO: remove
-  console.log("HASH:", tx.hash); // TODO: remove
 
   tx.wait()
     .then((receipt: any) => {
-      console.log("RECEIPT", receipt); // TODO: remove
-      window.web3gl.sendGTSResponse = receipt;
+      window.web3gl.sendGTSResponse = JSON.stringify(receipt);
     })
     .catch((error: any) => {
       window.web3gl.sendGTSResponse = error.message;
