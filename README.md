@@ -13,7 +13,7 @@ window.webgl.connect();
 Get Network:
 
 ```javascript
-window.web3gl.network;
+window.web3gl.networkId;
 ```
 
 Get Connected Address:
