@@ -1,64 +1,11 @@
-# Unity ^2019.4 Web3GL Template with Create React App
+# Unity ^2019.1.0 Web3GL Template
 
-[![](https://user-images.githubusercontent.com/19412160/118584681-7a844200-b765-11eb-8336-6828eafb823d.png)](https://www.youtube.com/watch?v=WkWYPuFHM5k)
+## Methods in Browser
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![](https://user-images.githubusercontent.com/19412160/132386771-9468f399-9640-4b6a-b28d-576ad7d966a5.png)
 
-## Notes
+Dispay login modal: `webgl.connect()`
 
-### WebGL Prefabs require an `EventSystem`
+Get Network: `web3gl.network`
 
-![](https://user-images.githubusercontent.com/19412160/118584689-7fe18c80-b765-11eb-9ee0-869b7963cb0b.png)
-
-### Use Web3GL Template
-
-![](https://user-images.githubusercontent.com/19412160/118584695-8243e680-b765-11eb-9e4b-4488a7078a56.png)
-
-### Disable Compression
-
-![](https://user-images.githubusercontent.com/19412160/118584702-83751380-b765-11eb-9610-c833c3d5a8c8.png)
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-Change `build` folder to `Web3GLTemplate`. This is used for Unity's [WebGL Template](https://docs.unity3d.com/Manual/webgl-templates.html)
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Get Connected Address: `web3gl.connectAccount`
