@@ -1,4 +1,4 @@
-# Unity ^2019.1.0 Web3GL Template
+# Unity ^2020.1.0 Web3GL Template
 
 ## Methods in Browser
 
@@ -79,3 +79,7 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
     }
   };
 ```
+
+Replace `infuraID: "00000000000000000000000000000000"`
+
+![](https://user-images.githubusercontent.com/19412160/149654154-3a9a5066-1c8b-42cd-90f9-204014b56154.png)
