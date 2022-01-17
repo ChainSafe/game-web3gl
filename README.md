@@ -65,6 +65,8 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 
 ## Enable WalletConnect
 
+Uncomment
+
 ```javascript
 document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js" }));
 ```
@@ -80,6 +82,6 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
   };
 ```
 
-Replace `infuraID: "00000000000000000000000000000000"`
+Replace `infuraId: "00000000000000000000000000000000"`
 
 ![](https://user-images.githubusercontent.com/19412160/149654154-3a9a5066-1c8b-42cd-90f9-204014b56154.png)
