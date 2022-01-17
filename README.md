@@ -65,6 +65,8 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 
 ## Enable WalletConnect
 
+In `web3/index.js`
+
 Uncomment
 
 ```javascript
