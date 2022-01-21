@@ -14,6 +14,14 @@ declare global {
 interface Web3GL {
   connect: () => void;
   connectAccount: string;
+  callContract: (
+    method: string,
+    abi: string,
+    contract: string,
+    args: string
+  ) => void;
+  callContractResponse: string;
+  callContractError: string;
   sendContract: (
     method: string,
     abi: string,
@@ -40,6 +48,9 @@ interface Web3GL {
 window.web3gl = {
   connect,
   connectAccount: "",
+  callContract,
+  callContractResponse: "",
+  callContractError: "",
   sendContract,
   sendContractResponse: "",
   sendTransaction,
@@ -103,6 +114,29 @@ async function signMessage(message: string) {
   } catch (error: any) {
     window.web3gl.signMessageResponse = error.message;
   }
+}
+
+/*
+calls a non-mutable contract method.
+
+const method = "x"
+const abi = `[ { "inputs": [], "name": "increment", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "x", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]`;
+const contract = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
+const args = "[]"
+window.web3gl.callContract(method, abi, contract, args)
+*/
+async function callContract(
+  method: string,
+  abi: string,
+  contract: string,
+  args: string
+) {
+  const from = (await web3.eth.getAccounts())[0];
+  new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
+    ...JSON.parse(args)
+  ).call()
+    .then((result: string) => window.web3gl.callContractResponse = result)
+    .catch((error: any) => window.web3gl.callContractError = error.message);
 }
 
 /*
