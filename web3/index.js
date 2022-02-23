@@ -59,14 +59,15 @@ async function connect() {
 
   // if current network id is not equal to network id, then switch
   if (web3gl.networkId != window.web3ChainId) {
-    await window.ethereum
-      .request({
+    try {
+      await window.ethereum.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: `0x${window.web3ChainId.toString(16)}` }], // chainId must be in hexadecimal numbers
-      })
-      .catch(() => {
-        window.location.reload();
       });
+    } catch {
+      // if network isn't added, pop-up metamask to add
+      await addEthereumChain();
+    }
   }
 
   // set current account
@@ -148,5 +149,39 @@ async function sendContract(method, abi, contract, args, value, gasLimit, gasPri
     })
     .on("error", (error) => {
       window.web3gl.sendContractResponse = error.message;
+    });
+}
+
+// add new wallet to in metamask
+async function addEthereumChain() {
+  const account = (await web3.eth.getAccounts())[0];
+
+  // fetch https://chainid.network/chains.json
+  const response = await fetch("https://chainid.network/chains.json");
+  const chains = await response.json();
+
+  // find chain with network id
+  const chain = chains.find((chain) => chain.chainId == window.web3ChainId);
+
+  const params = {
+    chainId: "0x" + chain.chainId.toString(16), // A 0x-prefixed hexadecimal string
+    chainName: chain.name,
+    nativeCurrency: {
+      name: chain.nativeCurrency.name,
+      symbol: chain.nativeCurrency.symbol, // 2-6 characters long
+      decimals: chain.nativeCurrency.decimals,
+    },
+    rpcUrls: chain.rpc,
+    blockExplorerUrls: [chain.explorers && chain.explorers.length > 0 && chain.explorers[0].url ? chain.explorers[0].url : chain.infoURL],
+  };
+
+  await window.ethereum
+    .request({
+      method: "wallet_addEthereumChain",
+      params: [params, account],
+    })
+    .catch(() => {
+      // I give up
+      window.location.reload();
     });
 }
