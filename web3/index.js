@@ -71,7 +71,9 @@ async function connect() {
   }
 
   // set current account
-  web3gl.connectAccount = provider.selectedAddress;
+  // provider.selectedAddress works for metamask and torus
+  // provider.accounts[0] works for walletconnect
+  web3gl.connectAccount = provider.selectedAddress || provider.accounts[0];
 
   // refresh page if player changes account
   provider.on("accountsChanged", (accounts) => {
