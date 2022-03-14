@@ -18,7 +18,9 @@ window.web3gl = {
   signMessageResponse: "",
   sendTransaction,
   sendTransactionResponse: "",
+  isWeb3Enabled,
   sendContract,
+
   sendContractResponse: "",
 };
 
@@ -152,6 +154,16 @@ async function sendContract(method, abi, contract, args, value, gasLimit, gasPri
     .on("error", (error) => {
       window.web3gl.sendContractResponse = error.message;
     });
+}
+
+// detect is web3 is enabled
+async function isWeb3Enabled() {
+  if (typeof window.ethereum !== 'undefined') {
+    return true;
+  } else {
+    return false;
+     window.alert('Web3 Needed! Please Install Web3 Wallet ');
+  }
 }
 
 // add new wallet to in metamask
