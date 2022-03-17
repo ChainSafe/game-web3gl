@@ -38,7 +38,7 @@ async function connect() {
     walletconnect: {
        package: window.WalletConnectProvider.default,
        options: {
-         infuraId: "31a6f00d65554d31825dfeb9c5c265fe",
+         infuraId: "INFURA_KEY",
        },
     },
     "custom-example": {
@@ -52,7 +52,7 @@ async function connect() {
       options: {
         supportedChainIds: [1],
         rpc: {
-          1: "https://mainnet.infura.io/v3/31a6f00d65554d31825dfeb9c5c265fe",
+          1: "https://mainnet.infura.io/v3/INFURA_KEY",
           25: "https://evm.cronos.org/" // cronos mainet
         },
         pollingInterval: 15000
