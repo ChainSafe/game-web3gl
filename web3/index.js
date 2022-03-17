@@ -5,7 +5,7 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 // load web3js to create transactions
 document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "./web3/lib/web3.min.js" }));
 // uncomment to enable torus wallet
-document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://cdn.jsdelivr.net/npm/@deficonnect/web3-provider@1.6.13/dist/esm/index.min.js" }));
+// document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@toruslabs/torus-embed" }));
 // uncomment to enable walletconnect
 document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js" }));
 // Load defi connect
