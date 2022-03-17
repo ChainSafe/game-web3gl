@@ -26,7 +26,6 @@ window.web3gl = {
 
 // will be defined after connect()
 let provider;
-let connector;
 let web3;
 
 /*
