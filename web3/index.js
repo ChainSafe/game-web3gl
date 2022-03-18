@@ -9,7 +9,7 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 // uncomment to enable walletconnect
 document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js" }));
 // Load defi connect
-document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "./web3/lib/deficonnect.umd.js" }));
+document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/deficonnect@1.1.13/dist/index.umd.js" }));
 
 // load web3gl to connect to unity
 window.web3gl = {
@@ -38,7 +38,7 @@ async function connect() {
     walletconnect: {
        package: window.WalletConnectProvider.default,
        options: {
-         infuraId: "INFURA_KEY",
+         infuraId: "31a6f00d65554d31825dfeb9c5c265fe",
        },
     },
     "custom-example": {
@@ -52,7 +52,7 @@ async function connect() {
       options: {
         supportedChainIds: [1],
         rpc: {
-          1: "https://mainnet.infura.io/v3/INFURA_KEY",
+          1: "https://mainnet.infura.io/v3/31a6f00d65554d31825dfeb9c5c265fe",
           25: "https://evm.cronos.org/" // cronos mainet
         },
         pollingInterval: 15000
