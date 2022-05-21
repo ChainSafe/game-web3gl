@@ -11,15 +11,17 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 
 // load web3gl to connect to unity
 window.web3gl = {
-  networkId: 0,
-  connect,
-  connectAccount: "",
-  signMessage,
-  signMessageResponse: "",
-  sendTransaction,
-  sendTransactionResponse: "",
-  sendContract,
-  sendContractResponse: "",
+    networkId: 0,
+    connect,
+    connectAccount: "",
+    signMessage,
+    signMessageResponse: "",
+    sendTransaction,
+    sendTransactionResponse: "",
+    sendTransactionData,
+    sendTransactionResponseData:"",
+    sendContract,
+    sendContractResponse: "",
 };
 
 // will be defined after connect()
@@ -124,6 +126,36 @@ async function sendTransaction(to, value, gasLimit, gasPrice) {
       .on("error", (error) => {
         window.web3gl.sendTransactionResponse = error.message;
       });
+}
+
+/*
+paste this in inspector to send eth:
+const to = "0x20E7D0C4182149ADBeFE446E82358A2b2D5244e9"
+const value = "0"
+const gasPrice = "1100000010"
+const gasLimit = "228620" // gas limit
+const data = "0xd0def521000000000000000000000000d25b827d92b0fd656a1c829933e9b0b836d5c3e20000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000002e516d586a576a6a4d55387233395543455a38343833614e6564774e5246524c767656396b7771314770436774686a000000000000000000000000000000000000"
+
+
+window.web3gl.sendTransactionData(to, value, gasPrice, gasLimit, data);
+*/
+async function sendTransactionData(to, value, gasPrice, gasLimit, data) {
+    const from = (await web3.eth.getAccounts())[0];
+    web3.eth
+        .sendTransaction({
+            from,
+            to,
+            value,
+            gasPrice: gasPrice ? gasPrice : undefined,
+            gas: gasLimit ? gasLimit : undefined,
+            data: data ? data : undefined,
+        })
+        .on("transactionHash", (transactionHash) => {
+            window.web3gl.sendTransactionResponseData = transactionHash;
+        })
+        .on("error", (error) => {
+            window.web3gl.sendTransactionResponseData = error.message;
+        });
 }
 
 /*
