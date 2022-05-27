@@ -16,7 +16,13 @@ window.web3gl = {
     connectAccount: "",
     signMessage,
     signMessageResponse: "",
+    callContract,
+    callContractResponse:"",
+    callContractError:"",
     sendTransaction,
+    sendTransactionResponse: "",
+    sha3Message,
+    hashMessageResponse: "",
     sendTransactionResponse: "",
     sendTransactionData,
     sendTransactionResponseData:"",
@@ -87,6 +93,17 @@ async function connect() {
     web3gl.networkId = parseInt(chainId);
   });
 }
+/*
+    Will calculate the sha3 of the input.
+*/
+async function sha3Message(message) {
+    try {
+        const hashedMessage = await web3.utils.sha3(message);
+        window.web3gl.hashMessageResponse = hashedMessage;
+    } catch (error) {
+        window.web3gl.hashMessageResponse = error.message;
+    }
+}
 
 /*
 paste this in inspector to connect to sign message:
@@ -96,7 +113,7 @@ async function signMessage(message) {
   try {
     const from = (await web3.eth.getAccounts())[0];
     const signature = await web3.eth.personal.sign(message, from, "");
-    window.web3gl.signMessageResponse = signature;
+      window.web3gl.signMessageResponse = signature;
   } catch (error) {
     window.web3gl.signMessageResponse = error.message;
   }
@@ -156,6 +173,23 @@ async function sendTransactionData(to, value, gasPrice, gasLimit, data) {
         .on("error", (error) => {
             window.web3gl.sendTransactionResponseData = error.message;
         });
+}
+
+/*
+calls a non-mutable contract method.
+const method = "x"
+const abi = `[ { "inputs": [], "name": "increment", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "x", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "stateMutability": "view", "type": "function" } ]`;
+const contract = "0xB6B8bB1e16A6F73f7078108538979336B9B7341C"
+const args = "[]"
+window.web3gl.callContract(method, abi, contract, args)
+*/
+async function callContract(method, abi, contract, args) {
+    const from = (await web3.eth.getAccounts())[0];
+    new web3.eth.Contract(JSON.parse(abi), contract).methods[method](
+        ...JSON.parse(args)
+    ).call()
+        .then((result) => window.web3gl.callContractResponse = result)
+        .catch((error) => window.web3gl.callContractError = error.message);
 }
 
 /*
