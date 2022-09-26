@@ -7,7 +7,7 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 // uncomment to enable torus wallet
 // document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@toruslabs/torus-embed" }));
 // uncomment to enable walletconnect
-// document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js" }));
+document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js" }));
 
 // load web3gl to connect to unity
 window.web3gl = {
@@ -33,13 +33,16 @@ async function connect() {
     // torus: {
     //   package: Torus,
     // },
-    // walletconnect: {
-    //   package: window.WalletConnectProvider.default,
-    //   options: {
-    //     infuraId: "00000000000000000000000000000000",
-    //   },
-    // },
   };
+
+  if (window.web3InfuraId !== undefined && window.web3InfuraId !== "" && window.web3InfuraId !== "00000000000000000000000000000000") {
+    providerOptions.walletconnect = {
+      package: window.WalletConnectProvider.default,
+      options: {
+        infuraId: window.web3InfuraId,
+      },
+    };
+  }
 
   const web3Modal = new window.Web3Modal.default({
     providerOptions,
@@ -93,9 +96,9 @@ async function sendAsync(method, params) {
     },
     async (error, result) => {
       if (error) {
-        window.web3gl.sendAsyncError = JSON.stringify(error);
+        window.web3gl.sendAsyncError = JSON.stringify(error.message);
       } else {
-        window.web3gl.sendAsyncResponse = JSON.stringify(result);
+        window.web3gl.sendAsyncResponse = JSON.stringify(result.result);
       }
     }
   );

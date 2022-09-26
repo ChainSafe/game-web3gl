@@ -23,3 +23,4 @@ Used to set the network: https://chainlist.org/
 */
 
 window.web3ChainId = 1;
+window.web3InfuraId = "00000000000000000000000000000000";
