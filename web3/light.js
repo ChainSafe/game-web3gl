@@ -28,7 +28,7 @@ paste this in inspector to connect to wallet:
 window.web3gl.connect()
 */
 async function connect() {
-  // uncomment to enable torus and walletconnect
+  // uncomment to enable torus
   const providerOptions = {
     // torus: {
     //   package: Torus,
@@ -53,22 +53,6 @@ async function connect() {
   // set provider
   provider = await web3Modal.connect();
   web3 = new Web3(provider);
-
-  // set current network id
-  web3gl.networkId = parseInt(provider.chainId);
-
-  // if current network id is not equal to network id, then switch
-  if (web3gl.networkId != window.web3ChainId) {
-    try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: `0x${window.web3ChainId.toString(16)}` }], // chainId must be in hexadecimal numbers
-      });
-    } catch {
-      // if network isn't added, pop-up metamask to add
-      await addEthereumChain();
-    }
-  }
 
   // set current account
   // provider.selectedAddress works for metamask and torus
@@ -96,7 +80,7 @@ async function sendAsync(method, params) {
     },
     async (error, result) => {
       if (error) {
-        window.web3gl.sendAsyncError = JSON.stringify(error.message);
+        window.web3gl.sendAsyncError = JSON.stringify(error);
       } else {
         window.web3gl.sendAsyncResponse = JSON.stringify(result.result);
       }
