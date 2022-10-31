@@ -14,6 +14,7 @@ window.web3gl = {
   networkId: 0,
   connect,
   connectAccount: "",
+  clearResponse,
   sendAsync,
   sendAsyncResponse: "",
   sendAsyncError: "",
@@ -34,14 +35,14 @@ async function connect() {
     //   package: Torus,
     // },
   };
-
-  if (window.web3InfuraId !== undefined && window.web3InfuraId !== "" && window.web3InfuraId !== "00000000000000000000000000000000") {
+  
+  if (window.web3InfuraId !== undefined && window.web3InfuraId !== "" &&  window.web3InfuraId !== "00000000000000000000000000000000") {
     providerOptions.walletconnect = {
       package: window.WalletConnectProvider.default,
       options: {
-        infuraId: window.web3InfuraId,
+        infuraId: window.web3InfuraId
       },
-    };
+    }
   }
 
   const web3Modal = new window.Web3Modal.default({
@@ -68,6 +69,11 @@ async function connect() {
   provider.on("chainChanged", (chainId) => {
     web3gl.networkId = parseInt(chainId);
   });
+}
+
+function clearResponse() {
+  window.web3gl.sendAsyncResponse = "";
+  window.web3gl.sendAsyncError = "";
 }
 
 async function sendAsync(method, params) {
