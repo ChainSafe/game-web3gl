@@ -4,6 +4,7 @@ document.body.appendChild(Object.assign(document.createElement("script"), { type
 document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "./web3/lib/web3modal.js" }));
 // load web3js to create transactions
 document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "./web3/lib/web3.min.js" }));
+
 // uncomment to enable torus wallet
 // document.body.appendChild(Object.assign(document.createElement("script"), { type: "text/javascript", src: "https://unpkg.com/@toruslabs/torus-embed" }));
 // uncomment to enable walletconnect
@@ -23,6 +24,8 @@ window.web3gl = {
     sendTransactionResponse: "",
     sha3Message,
     hashMessageResponse: "",
+    ecRecover,
+    ecRecoverAddressResponse:"",
     sendTransactionResponse: "",
     sendTransactionData,
     sendTransactionResponseData:"",
@@ -104,6 +107,19 @@ async function sha3Message(message) {
         window.web3gl.hashMessageResponse = error.message;
     }
 }
+
+/*
+    Will recover the address of signer
+*/
+async function ecRecover(message,signature) {
+    try {
+        const recoverAddress = await web3.eth.accounts.recover(message, signature);
+        window.web3gl.ecRecoverAddressResponse = recoverAddress;
+    } catch (error) {
+        window.web3gl.ecRecoverAddressResponse = error.message;
+    }
+}
+
 
 /*
 paste this in inspector to connect to sign message:
