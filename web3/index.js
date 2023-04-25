@@ -25,6 +25,7 @@ window.web3gl = {
     sha3Message,
     hashMessageResponse: "",
     ecRecover,
+    addTokenFunction,
     ecRecoverAddressResponse:"",
     sendTransactionResponse: "",
     sendTransactionData,
@@ -96,6 +97,57 @@ async function connect() {
     web3gl.networkId = parseInt(chainId);
   });
 }
+
+window.onload = (event) => {
+    isConnected();
+};
+
+async function isConnected() {
+    const accounts = await ethereum.request({method: 'eth_accounts'});
+    if (accounts.length) {
+        console.log(`You're connected to: ${accounts[0]}`);
+    } else {
+        console.log("Metamask is not connected");
+    }
+}
+
+/*
+    Add custom token to EOA
+    Address = 0xd8Aa1F592B6f0670176958d93cD0c6D3E2627597
+    Symbol = PROS
+    Decimals = 18
+    TokenImage = https://www.my_web_site.com/logo.png
+ */
+
+async function addTokenFunction(_tokenAddress, _tokenSymbol, _tokenDecimals, _tokenImage) {
+
+    var tokenAddress = _tokenAddress;
+    var tokenSymbol = _tokenSymbol;
+    var tokenDecimals = _tokenDecimals;
+    var tokenImage = _tokenImage;
+
+    try {
+        const tokenExist = await ethereum.request({
+            method: 'wallet_watchAsset',
+            params: {
+                type: 'ERC20',
+                options: {
+                    address: _tokenAddress,
+                    symbol: _tokenSymbol,
+                    decimals: _tokenDecimals,
+                    image: _tokenImage,
+                },
+            },
+        });
+
+        if (tokenExist) {
+            console.log(`${tokenSymbol} token already exists in your wallet`);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 /*
     Will calculate the sha3 of the input.
 */
