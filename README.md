@@ -45,6 +45,17 @@ const gasPrice = "333333333333";
 window.web3gl.sendContract(method, abi, contract, args, value, gasLimit, gasPrice);
 ```
 
+Add Custom Token Contract:
+
+```javascript
+const tokenContract = "0xd8Aa1F592B6f0670176958d93cD0c6D3E2627597";
+const tokenSymbol = "PROS";
+const decimals = "18";
+const tokenImage = "https://www.kwamebryan.com/logo.png";
+
+window.web3gl.addTokenFunction(tokenContract,tokenSymbol,decimals,tokenImage);
+```
+
 ## Enable Torus
 
 In `web3/index.js`
