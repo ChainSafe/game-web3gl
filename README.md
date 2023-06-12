@@ -51,7 +51,7 @@ Add Custom Token Contract:
 const tokenContract = "0xd8Aa1F592B6f0670176958d93cD0c6D3E2627597";
 const tokenSymbol = "PROS";
 const decimals = "18";
-const tokenImage = "https://www.kwamebryan.com/logo.png";
+const tokenImage = "https://www.your_url_path.com/logo.png";
 
 window.web3gl.addTokenFunction(tokenContract,tokenSymbol,decimals,tokenImage);
 ```
